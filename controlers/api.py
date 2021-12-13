@@ -8,6 +8,9 @@ class Api:
         self.orchestrator = orchestrator
         self.app = app
 
+        self.orchestrator.start_monitoring()
+
+
         self.app.add_url_rule('/state', 'getState', self.get_state, methods=['GET'], )
         self.app.add_url_rule()
 

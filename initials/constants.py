@@ -4,6 +4,10 @@ class GPIO:
     GPIO_BLUE = 27                              # GPIO pin for 12V blue channel
     GPIO_WS281B = 18                            # GPIO pin for WS281B addressable strip
     GPIO_W1 = 4                                 # GPIO pin for 1-wire interface
+    GPIO_TRIGGER = 23
+    GPIO_ECHO = 24
+    GPIO_MOTION = 7
+    GPIO_LDR = 25
 
 
 class LEDStrip:
