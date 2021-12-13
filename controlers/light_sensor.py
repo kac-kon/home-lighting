@@ -35,7 +35,7 @@ class LightSensor:
 
             self.value = count
             print(count)
-            self.lights_on = False if count > 150000 else True
+            self.lights_on = False if count > 150 else True
             time.sleep(.3)
 
     def register_lighting_observer(self, callback: object) -> None:
