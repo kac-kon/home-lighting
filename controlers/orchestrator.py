@@ -96,6 +96,7 @@ class Orchestrator:
                 print('reset timer')
                 self._motion_event.set()
                 self._motion_thread.join()
+                self._motion_event.clear()
             self._motion_thread = Thread(target=self._wait_for_no_motion)
             self._motion_start_time = time.time()
             self._motion_thread.start()
