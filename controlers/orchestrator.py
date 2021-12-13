@@ -23,7 +23,7 @@ class Orchestrator:
         self._motion_thread = Thread()
         self._motion_start_time = 0
         self._leds_off = True
-        self._motion_timer = 20 * 2
+        self._motion_timer = 60 * 2
 
     def start_auto_led(self):
         self._spec.start_auto()
@@ -88,7 +88,7 @@ class Orchestrator:
 
     def _motion_observer(self) -> None:
         print('motion detected')
-        if not self._light.lights_on and time.time() > self._motion_start_time + 5:
+        if not self._light.lights_on:
             if self._leds_off and not self._motion_thread.is_alive():
                 self.lights_up()
             if self._motion_thread.is_alive():
