@@ -97,5 +97,6 @@ class Orchestrator:
             self._motion_thread = Thread(target=self._wait_for_no_motion)
             self._motion_start_time = time.time()
             self._motion_thread.start()
-
-
+        else:
+            self.set_colors([0, 0, 0])
+            self._leds_off = True
