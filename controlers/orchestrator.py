@@ -72,7 +72,7 @@ class Orchestrator:
 
     def _wait_for_no_motion(self):
         count = 0
-        while not self._motion_event.is_set() or count < 60:
+        while not self._motion_event.is_set() or count < 10:
             count += 1
             time.sleep(1)
         if count >= 10:
