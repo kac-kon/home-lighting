@@ -47,7 +47,7 @@ class DistanceSensor:
                 self.distance = distance
                 self._notify_observers()
 
-            time.sleep(.2)
+            time.sleep(.5)
 
     def register_distance_observer(self, callback: object):
         self._callbacks.append(callback)

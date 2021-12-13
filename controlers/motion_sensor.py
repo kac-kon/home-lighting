@@ -25,7 +25,7 @@ class MotionSensor:
         while not self._monitoring_event.is_set():
             if self.is_motion_active():
                 self._notify_observer()
-            time.sleep(.1)
+            time.sleep(.5)
 
     def _monitor_activity_timed(self, timeout: float) -> None:
         while not self._monitoring_event.is_set():
@@ -33,7 +33,7 @@ class MotionSensor:
             if self.is_motion_active():
                 self._notify_observer()
                 time.sleep(timeout)
-            time.sleep(.1)
+            time.sleep(.5)
 
     def register_motion_callback(self, callback: object) -> None:
         self._callbacks.append(callback)
