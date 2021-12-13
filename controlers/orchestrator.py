@@ -88,7 +88,7 @@ class Orchestrator:
             print(f'motion detected, motion thread: {self._motion_thread.is_alive()}')
             if self._leds_off:
                 self.lights_up()
-            else:
+            elif self._motion_thread.is_alive():
                 self._motion_event.set()
                 self._motion_thread.join()
             self._motion_thread = Thread(target=self._wait_for_no_motion)
