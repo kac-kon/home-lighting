@@ -75,10 +75,12 @@ class Orchestrator:
     def _wait_for_no_motion(self):
         count = 0
         print('timer reseteded')
-        while not self._motion_event.is_set() or count < 20:
+        while not self._motion_event.is_set():
             count += 1
-            time.sleep(1)
-        if count >= 20:
+            time.sleep(.5)
+            if count < 40:
+                break
+        if count >= 40:
             self.set_colors([0, 0, 0])
             self._leds_off = True
 
