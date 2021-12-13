@@ -11,7 +11,7 @@ class LightSensor:
         self._ldr = INITS.GPIO_LDR
 
         self.value = 0
-        self.lights_off = False
+        self.lights_on = False
 
         self._monitoring_thread = Thread()
         self._monitoring_event = Event()
@@ -33,9 +33,8 @@ class LightSensor:
                 count += 1
 
             self.value = count
-            self.lights_off = False if count > 150000 else True
+            self.lights_on = False if count > 150000 else True
             time.sleep(.3)
-
 
     def register_lighting_observer(self, callback: object) -> None:
         self._callbacks.append(callback)
