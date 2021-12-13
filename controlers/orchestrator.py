@@ -100,7 +100,8 @@ class Orchestrator:
             self._motion_thread.start()
         else:
             self._motion_event.set()
-            self._motion_thread.join()
+            if self._motion_thread.is_alive():
+                self._motion_thread.join()
             self._motion_event.clear()
             self.set_colors([0, 0, 0])
             self._leds_off = True
