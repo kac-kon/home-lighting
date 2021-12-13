@@ -90,7 +90,7 @@ class Orchestrator:
         print('motion detected')
         # if time.time() > self._motion_start_time + 5 and self._light.lights_off:
         if not self._light.lights_on:
-            if self._leds_off:
+            if self._leds_off and not self._motion_thread.is_alive():
                 self.lights_up()
             if self._motion_thread.is_alive():
                 self._motion_event.set()
@@ -100,5 +100,8 @@ class Orchestrator:
             self._motion_start_time = time.time()
             self._motion_thread.start()
         else:
+            self._motion_event.set()
+            self._motion_thread.join()
+            self._motion_event.clear()
             self.set_colors([0, 0, 0])
             self._leds_off = True
