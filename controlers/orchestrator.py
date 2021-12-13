@@ -78,11 +78,13 @@ class Orchestrator:
         while not self._motion_event.is_set():
             count += 1
             time.sleep(.5)
-            if count >= 40:
+            print(count)
+            if count >= 10:
                 break
-        if count >= 40:
+        if count >= 10:
             self.set_colors([0, 0, 0])
             self._leds_off = True
+        print('end of loop')
 
     def _motion_observer(self) -> None:
         print('motion detected')
