@@ -56,9 +56,11 @@ class Orchestrator:
         return self._led.get_led_state()
 
     def start_monitoring(self) -> None:
+        print("starting monitoring")
         self._distance.start_monitoring()
         self._light.start_monitoring()
         self._motion.start_monitoring()
+        print("started monitoring")
 
     def stop_monitoring(self) -> None:
         self._distance.stop_monitoring()
