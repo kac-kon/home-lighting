@@ -75,7 +75,7 @@ class Orchestrator:
         while not self._motion_event.is_set() or count < 60:
             count += 1
             time.sleep(1)
-        if count >= 60:
+        if count >= 10:
             self.set_colors([0, 0, 0])
 
     def _motion_observer(self) -> None:
