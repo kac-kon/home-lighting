@@ -78,7 +78,7 @@ class Orchestrator:
         while not self._motion_event.is_set():
             count += 1
             time.sleep(.5)
-            if count < 40:
+            if count >= 40:
                 break
         if count >= 40:
             self.set_colors([0, 0, 0])
