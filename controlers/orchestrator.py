@@ -98,7 +98,7 @@ class Orchestrator:
             self._motion_thread = Thread(target=self._wait_for_no_motion)
             self._motion_start_time = time.time()
             self._motion_thread.start()
-        else:
+        elif self._light.lights_on:
             self._motion_event.set()
             if self._motion_thread.is_alive():
                 self._motion_thread.join()
