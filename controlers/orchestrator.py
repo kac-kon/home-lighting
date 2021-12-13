@@ -83,8 +83,9 @@ class Orchestrator:
             print('motion detected, lights out')
             if not self._motion_thread.is_alive():
                 self.lights_up()
-            self._motion_event.set()
-            self._motion_thread.join()
+            else:
+                self._motion_event.set()
+                self._motion_thread.join()
             self._motion_thread = Thread(target=self._wait_for_no_motion)
             self._motion_start_time = time.time()
             self._motion_thread.run()
