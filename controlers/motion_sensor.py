@@ -43,6 +43,7 @@ class MotionSensor:
             callback()
 
     def start_monitoring(self):
+        print("starting monitoring motion")
         if self._monitoring_thread.is_alive():
             self._monitoring_event.set()
             self._monitoring_thread.join()
@@ -53,6 +54,7 @@ class MotionSensor:
             self._monitoring_event.clear()
             self._monitoring_thread = Thread(target=self._monitor_activity)
             self._monitoring_thread.run()
+        print("started monitoring motion")
 
     def start_timed_monitoring(self, timeout: float) -> None:
         if self._monitoring_thread.is_alive():

@@ -57,6 +57,7 @@ class DistanceSensor:
             callback()
 
     def start_monitoring(self):
+        print("starting monitoring distance")
         if self._monitoring_thread.is_alive():
             self._monitoring_event.set()
             self._monitoring_thread.join()
@@ -67,6 +68,7 @@ class DistanceSensor:
             self._monitoring_event.clear()
             self._monitoring_thread = Thread(target=self.get_distance)
             self._monitoring_thread.run()
+        print("started monitoring distance")
 
     def stop_monitoring(self):
         self._monitoring_event.set()
