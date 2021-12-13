@@ -7,7 +7,7 @@ import pyaudio
 import random
 from struct import unpack
 import numpy as np
-from led_control import LED
+from controlers.led_control import LED
 
 
 class Spec:
