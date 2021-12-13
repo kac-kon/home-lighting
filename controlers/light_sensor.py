@@ -21,18 +21,21 @@ class LightSensor:
         GPIO.cleanup()
 
     def read_time(self) -> None:
-        count = 0
-        GPIO.setup(self._ldr, GPIO.OUT)
-        GPIO.output(self._ldr, False)
-        time.sleep(.1)
-        GPIO.setup(self._ldr, GPIO.IN)
+        print("light sensor read init")
+        while not self._monitoring_event.is_set():
+            count = 0
+            GPIO.setup(self._ldr, GPIO.OUT)
+            GPIO.output(self._ldr, False)
+            time.sleep(.1)
+            GPIO.setup(self._ldr, GPIO.IN)
 
-        while GPIO.input(self._ldr) == 0:
-            count += 1
+            while GPIO.input(self._ldr) == 0:
+                count += 1
 
-        self.value = count
-        self.lights_off = False if count > 150000 else True
-        time.sleep(.3)
+            self.value = count
+            self.lights_off = False if count > 150000 else True
+            print(self.lights_off)
+            time.sleep(.3)
 
 
     def register_lighting_observer(self, callback: object) -> None:

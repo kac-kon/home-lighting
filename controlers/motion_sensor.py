@@ -29,6 +29,7 @@ class MotionSensor:
 
     def _monitor_activity_timed(self, timeout: float) -> None:
         while not self._monitoring_event.is_set():
+            print(self.is_motion_active())
             if self.is_motion_active():
                 self._notify_observer()
                 time.sleep(timeout)
