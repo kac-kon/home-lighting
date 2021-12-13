@@ -49,11 +49,11 @@ class MotionSensor:
             self._monitoring_thread.join()
             self._monitoring_event.clear()
             self._monitoring_thread = Thread(target=self._monitor_activity)
-            self._monitoring_thread.run()
+            self._monitoring_thread.start()
         else:
             self._monitoring_event.clear()
             self._monitoring_thread = Thread(target=self._monitor_activity)
-            self._monitoring_thread.run()
+            self._monitoring_thread.start()
         print("started monitoring motion")
 
     def start_timed_monitoring(self, timeout: float) -> None:

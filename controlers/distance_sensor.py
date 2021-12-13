@@ -26,7 +26,6 @@ class DistanceSensor:
 
     def get_distance(self):
         while not self._monitoring_event.is_set():
-            print('getting distance')
             GPIO.output(self._trigger, True)
 
             time.sleep(0.00001)
@@ -49,7 +48,6 @@ class DistanceSensor:
                 self._notify_observers()
 
             time.sleep(.2)
-            print(f'distance: {distance}')
 
     def register_distance_observer(self, callback: object):
         self._callbacks.append(callback)
@@ -65,11 +63,11 @@ class DistanceSensor:
             self._monitoring_thread.join()
             self._monitoring_event.clear()
             self._monitoring_thread = Thread(target=self.get_distance)
-            self._monitoring_thread.run()
+            self._monitoring_thread.start()
         else:
             self._monitoring_event.clear()
             self._monitoring_thread = Thread(target=self.get_distance)
-            self._monitoring_thread.run()
+            self._monitoring_thread.start()
         print("started monitoring distance")
 
     def stop_monitoring(self):

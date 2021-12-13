@@ -52,11 +52,11 @@ class LightSensor:
             self._monitoring_thread.join()
             self._monitoring_event.clear()
             self._monitoring_thread = Thread(target=self.read_time)
-            self._monitoring_thread.run()
+            self._monitoring_thread.start()
         else:
             self._monitoring_event.clear()
             self._monitoring_thread = Thread(target=self.read_time)
-            self._monitoring_thread.run()
+            self._monitoring_thread.start()
         print("started monitoring lights")
 
 
