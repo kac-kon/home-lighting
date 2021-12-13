@@ -31,8 +31,10 @@ class LightSensor:
 
             while GPIO.input(self._ldr) == 0:
                 count += 1
+                time.sleep(.001)
 
             self.value = count
+            print(count)
             self.lights_on = False if count > 150000 else True
             time.sleep(.3)
 
