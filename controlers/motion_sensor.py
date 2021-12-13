@@ -22,11 +22,8 @@ class MotionSensor:
         return GPIO.input(self._motion)
 
     def _monitor_activity(self) -> None:
-        print('motion activity monitored')
         while not self._monitoring_event.is_set():
-            print('monitoring...')
             if self.is_motion_active():
-                print('motion is active')
                 self._notify_observer()
             time.sleep(.1)
 
