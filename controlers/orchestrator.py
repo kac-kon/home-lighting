@@ -79,9 +79,9 @@ class Orchestrator:
             self.set_colors([0, 0, 0])
 
     def _motion_observer(self) -> None:
-        print(f"motion detected, lights off: {self._light.lights_on}")
+        print(f"motion detected, lights on: {self._light.lights_on}")
         # if time.time() > self._motion_start_time + 5 and self._light.lights_off:
-        if self._light.lights_on:
+        if not self._light.lights_on:
             print('motion detected, lights out')
             if not self._motion_thread.is_alive():
                 self.lights_up()
