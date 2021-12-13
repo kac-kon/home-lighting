@@ -34,7 +34,6 @@ class LightSensor:
 
             self.value = count
             self.lights_off = False if count > 150000 else True
-            print(self.lights_off)
             time.sleep(.3)
 
 
