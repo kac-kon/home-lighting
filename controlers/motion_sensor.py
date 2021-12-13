@@ -24,6 +24,7 @@ class MotionSensor:
     def _monitor_activity(self) -> None:
         print('motion activity monitored')
         while not self._monitoring_event.is_set():
+            print('monitoring...')
             if self.is_motion_active():
                 print('motion is active')
                 self._notify_observer()

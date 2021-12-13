@@ -12,7 +12,7 @@ class Api:
 
 
         self.app.add_url_rule('/state', 'getState', self.get_state, methods=['GET'], )
-        self.app.add_url_rule()
+        # self.app.add_url_rule()
 
     def get_state(self):
         pass
