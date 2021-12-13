@@ -82,7 +82,7 @@ class Orchestrator:
         print(f"motion detected, lights on: {self._light.lights_on}")
         # if time.time() > self._motion_start_time + 5 and self._light.lights_off:
         if not self._light.lights_on:
-            print('motion detected, lights out')
+            print(f'motion detected, motion thread: {self._motion_thread.is_alive()}')
             if not self._motion_thread.is_alive():
                 self.lights_up()
             else:
