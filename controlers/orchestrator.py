@@ -74,21 +74,22 @@ class Orchestrator:
 
     def _wait_for_no_motion(self):
         count = 0
-        while not self._motion_event.is_set() or count < 10:
+        print('timer reseteded')
+        while not self._motion_event.is_set() or count < 20:
             count += 1
             time.sleep(1)
-        if count >= 10:
+        if count >= 20:
             self.set_colors([0, 0, 0])
             self._leds_off = True
 
     def _motion_observer(self) -> None:
-        print(f"motion detected, lights on: {self._light.lights_on}")
+        print('motion detected')
         # if time.time() > self._motion_start_time + 5 and self._light.lights_off:
         if not self._light.lights_on:
-            print(f'motion detected, motion thread: {self._motion_thread.is_alive()}')
             if self._leds_off:
                 self.lights_up()
-            elif self._motion_thread.is_alive():
+            if self._motion_thread.is_alive():
+                print('reset timer')
                 self._motion_event.set()
                 self._motion_thread.join()
             self._motion_thread = Thread(target=self._wait_for_no_motion)
