@@ -88,8 +88,7 @@ class Orchestrator:
 
     def _motion_observer(self) -> None:
         print('motion detected')
-        # if time.time() > self._motion_start_time + 5 and self._light.lights_off:
-        if not self._light.lights_on:
+        if not self._light.lights_on and time.time() > self._motion_start_time + 5:
             if self._leds_off and not self._motion_thread.is_alive():
                 self.lights_up()
             if self._motion_thread.is_alive():
