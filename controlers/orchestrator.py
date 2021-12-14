@@ -95,22 +95,22 @@ class Orchestrator:
 
     def _motion_observer(self) -> None:
         print('motion detected')
-        # if not self._light.lights_on:
-        #     if self._leds_off and not self._motion_thread.is_alive():
-        #         self.lights_up()
-        #     if self._motion_thread.is_alive():
-        #         self._motion_event.set()
-        #         self._motion_thread.join()
-        #         self._motion_event.clear()
-        #     self._motion_thread = Thread(target=self._wait_for_no_motion)
-        #     self._motion_start_time = time.time()
-        #     self._motion_thread.start()
-        # elif self._light.lights_on:
-        #     self._motion_event.set()
-        #     if self._motion_thread.is_alive():
-        #         self._motion_thread.join()
-        #     self._motion_event.clear()
-        #     self.lights_down()
+        if not self._light.lights_on:
+            if self._leds_off and not self._motion_thread.is_alive():
+                self.lights_up()
+            if self._motion_thread.is_alive():
+                self._motion_event.set()
+                self._motion_thread.join()
+                self._motion_event.clear()
+            self._motion_thread = Thread(target=self._wait_for_no_motion)
+            self._motion_start_time = time.time()
+            self._motion_thread.start()
+        elif self._light.lights_on:
+            self._motion_event.set()
+            if self._motion_thread.is_alive():
+                self._motion_thread.join()
+            self._motion_event.clear()
+            self.lights_down()
 
     def switch_leds(self):
         if self._leds_off:
