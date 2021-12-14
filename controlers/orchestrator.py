@@ -114,21 +114,21 @@ class Orchestrator:
 
     def switch_leds(self):
         if self._leds_off:
+            print('up up')
             self.lights_up()
-            self._leds_off = False
         else:
+            print('going dark')
             self.lights_down()
-            self._leds_off = True
 
     def _distance_observer(self) -> None:
         dist = self._distance.distance
         print(f'distance changed to: {dist}')
-        if 5 < dist < 10:
+        if 5 <= dist <= 10:
             self.switch_leds()
-        elif 15 < dist < 20:
+        elif 15 <= dist <= 20:
             self._led.set_color([255, 0, 0])
-        elif 25 < dist < 30:
+        elif 25 <= dist <= 30:
             self._led.set_color([0, 255, 0])
-        elif 35 < dist < 40:
+        elif 35 <= dist <= 40:
             self._led.set_color([0, 0, 255])
 
