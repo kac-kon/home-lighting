@@ -12,7 +12,7 @@ class DistanceSensor:
         self._echo = INITS.GPIO_ECHO
         self._delta = 5
         self.distance = 0
-        self.threshold = 5
+        self.threshold = 2
 
         GPIO.setup(self._trigger, GPIO.OUT)
         GPIO.setup(self._echo, GPIO.IN)
@@ -47,7 +47,7 @@ class DistanceSensor:
                 self.distance = distance
                 self._notify_observers()
 
-            time.sleep(.5)
+            time.sleep(.2)
 
     def register_distance_observer(self, callback: object):
         self._callbacks.append(callback)
