@@ -12,7 +12,7 @@ class DistanceSensor:
         self._echo = INITS.GPIO_ECHO
         self._delta = 5
         self.distance = 0
-        self.threshold = 2
+        self.threshold = 3
 
         GPIO.setup(self._trigger, GPIO.OUT)
         GPIO.setup(self._echo, GPIO.IN)
@@ -43,7 +43,7 @@ class DistanceSensor:
             time_elapsed = stop_time - start_time
             distance = int((time_elapsed * 34300) / 2)
 
-            if abs(self.distance - distance) > self.threshold & distance < 300:
+            if abs(self.distance - distance) > self.threshold and distance < 300:
                 self.distance = distance
                 self._notify_observers()
 
