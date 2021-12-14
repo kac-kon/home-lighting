@@ -127,8 +127,8 @@ class Orchestrator:
             self.switch_leds()
         elif 15 <= dist <= 20:
             self._led.set_color([255, 0, 0])
-        elif 25 <= dist <= 30:
+        elif 20 < dist <= 25:
             self._led.set_color([0, 255, 0])
-        elif 35 <= dist <= 40:
+        elif 25 < dist <= 30:
             self._led.set_color([0, 0, 255])
 

@@ -46,6 +46,7 @@ class DistanceSensor:
             if abs(self.distance - distance) > self.threshold and distance < 300:
                 self.distance = distance
                 self._notify_observers()
+                time.sleep(.3)
 
             time.sleep(.2)
 
