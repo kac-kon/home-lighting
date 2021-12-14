@@ -18,12 +18,16 @@ class Orchestrator:
         self._light = LightSensor()
         self._motion = MotionSensor()
 
+        self.set_colors([255, 255, 255])
+
         self._motion.register_motion_callback(self._motion_observer)
         self._motion_event = Event()
         self._motion_thread = Thread()
         self._motion_start_time = 0
         self._leds_off = True
         self._motion_timer = 60 * 2
+
+        self._distance.register_distance_observer(self._distance_observer)
 
     def start_auto_led(self):
         self._spec.start_auto()
@@ -70,8 +74,12 @@ class Orchestrator:
         self._motion.stop_monitoring()
 
     def lights_up(self):
-        self.set_colors([255, 255, 255])
+        self._led.set_brightness(255)
         self._leds_off = False
+
+    def lights_down(self):
+        self._led.set_brightness(0)
+        self._leds_off = True
 
     def _wait_for_no_motion(self):
         count = 0
@@ -83,25 +91,44 @@ class Orchestrator:
             if count >= self._motion_timer:
                 break
         if count >= self._motion_timer:
-            self.set_colors([0, 0, 0])
-            self._leds_off = True
+            self.lights_down()
 
     def _motion_observer(self) -> None:
         print('motion detected')
-        if not self._light.lights_on:
-            if self._leds_off and not self._motion_thread.is_alive():
-                self.lights_up()
-            if self._motion_thread.is_alive():
-                self._motion_event.set()
-                self._motion_thread.join()
-                self._motion_event.clear()
-            self._motion_thread = Thread(target=self._wait_for_no_motion)
-            self._motion_start_time = time.time()
-            self._motion_thread.start()
-        elif self._light.lights_on:
-            self._motion_event.set()
-            if self._motion_thread.is_alive():
-                self._motion_thread.join()
-            self._motion_event.clear()
-            self.set_colors([0, 0, 0])
+        # if not self._light.lights_on:
+        #     if self._leds_off and not self._motion_thread.is_alive():
+        #         self.lights_up()
+        #     if self._motion_thread.is_alive():
+        #         self._motion_event.set()
+        #         self._motion_thread.join()
+        #         self._motion_event.clear()
+        #     self._motion_thread = Thread(target=self._wait_for_no_motion)
+        #     self._motion_start_time = time.time()
+        #     self._motion_thread.start()
+        # elif self._light.lights_on:
+        #     self._motion_event.set()
+        #     if self._motion_thread.is_alive():
+        #         self._motion_thread.join()
+        #     self._motion_event.clear()
+        #     self.lights_down()
+
+    def switch_leds(self):
+        if self._leds_off:
+            self.lights_up()
+            self._leds_off = False
+        else:
+            self.lights_down()
             self._leds_off = True
+
+    def _distance_observer(self) -> None:
+        dist = self._distance.distance
+        print(f'distance changed to: {dist}')
+        if 5 < dist < 10:
+            self.switch_leds()
+        elif 15 < dist < 20:
+            self._led.set_color([255, 0, 0])
+        elif 25 < dist < 30:
+            self._led.set_color([0, 255, 0])
+        elif 35 < dist < 40:
+            self._led.set_color([0, 0, 255])
+
