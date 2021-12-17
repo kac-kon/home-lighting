@@ -42,11 +42,14 @@ class Sensors:
     def _luminosity_observer(self) -> None:
         if self._light_sensor.lights_on and self._motion_sensor.is_monitored():
             self._motion_sensor.stop_monitoring()
+            self._orchestrator.lights_down()
         elif not self._light_sensor.lights_on and not self._motion_sensor.is_monitored():
             self._motion_sensor.start_monitoring()
+            self._orchestrator.lights_up()
 
     def _motion_observer(self) -> None:
         print('motion detected')
+        print(f'lights on: {self._orchestrator.lights_on}')
         if not self._orchestrator.lights_on and not self._movement_monitoring.is_thread_alive():
             self._orchestrator.lights_up()
         if self._movement_monitoring.is_thread_alive():
