@@ -21,14 +21,16 @@ class LED:
                                         constants.LEDStrip.LED_INVERT,
                                         constants.LEDStrip.LED_BRIGHTNESS,
                                         constants.LEDStrip.LED_CHANNEL)
-        self._fade_exit_event = threading.Event()
-        self._fade_thread_loop = threading.Thread()
         self._strip.begin()
         random.seed()
 
         self._var.register_led_color_callback(self._catch_color_change)
         self._var.register_led_enable_callback(self._catch_enable_change)
         self._var.register_led_strip_callback(self._catch_strip_properties_change)
+
+    @property
+    def lights_on(self) -> bool:
+        return False if self._var.led_brightness == 0 else True
 
     @staticmethod
     def random_colors() -> List[int]:
@@ -92,7 +94,7 @@ class LED:
     def _fade_away(self) -> None:
         self._var.led_brightness = constants.INITIALS.LED_BRIGHTNESS
         time.sleep(0.1)
-        while self._var.led_brightness > 0 and not self._fade_exit_event.is_set():
+        while self._var.led_brightness > 0:
             if (self._var.led_brightness - self._var.fade_away_speed) < 0:
                 self._var.led_brightness = 0
             else:
@@ -118,13 +120,23 @@ class LED:
 
     def set_addressed(self, properties: Dict[str, int]) -> None:
         """
-        :param properties: required keys: direction, frequency, count
+        :param properties: accepted keys: direction, frequency, count
         :return: None
         """
-        direction: int = properties['direction']
-        frequency: int = properties['frequency']
-        self._var.led_strip_direction = direction * frequency
-        self._var.led_strip_display = properties['count']
+        if properties.keys().__contains__('direction') and properties.keys().__contains__('frequency'):
+            direction: int = properties['direction']
+            frequency: int = properties['frequency']
+            self._var.led_strip_direction = direction * frequency
+        elif properties.keys().__contains__('frequency'):
+            frequency: int = properties['frequency']
+            direction: int = -1 if self._var.led_strip_direction < 0 else 1
+            self._var.led_strip_direction = direction * frequency
+        elif properties.keys().__contains__('direction'):
+            direction: int = properties['direction']
+            frequency: int = abs(self._var.led_strip_direction)
+            self._var.led_strip_direction = direction * frequency
+        if properties.keys().__contains__('count'):
+            self._var.led_strip_display = properties['count']
 
     def get_led_state(self) -> Dict[str, Any]:
         brightness = self._var.led_brightness

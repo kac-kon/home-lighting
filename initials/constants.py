@@ -30,6 +30,7 @@ class INITIALS:
     LED_STRIP_DIRECTION = 1                     # WS281B strip direction, 1 for forward, -1 for backward
     LED_STRIP_DISPLAY = LEDStrip.LED_COUNT      # number of WS281B strip lit counted from current direction start
     FADE_AWAY_SPEED = 10                        # LED's fading speed
+    MOTION_TIMEOUT = 60 * 2                     # Timeout for lights to switch off (doubled seconds)
 
 
 class AUDIO:
