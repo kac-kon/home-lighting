@@ -30,7 +30,7 @@ class LED:
 
     @property
     def lights_on(self) -> bool:
-        return False if self._var.led_brightness == 0 else True
+        return self._var.led5_on and self._var.led12_on
 
     @staticmethod
     def random_colors() -> List[int]:
