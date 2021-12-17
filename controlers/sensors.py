@@ -4,13 +4,13 @@ from controlers.distance_sensor import DistanceSensor
 from controlers.light_sensor import LightSensor
 from controlers.monitoring import Monitoring
 from controlers.motion_sensor import MotionSensor
-from controlers.orchestrator import Orchestrator
+# from controlers.orchestrator import Orchestrator
 from initials.constants import INITIALS
 
 
 class Sensors:
     def __init__(self,
-                 orchestrator: Orchestrator,
+                 orchestrator,
                  distance_sensor: DistanceSensor,
                  light_sensor: LightSensor,
                  motion_sensor: MotionSensor):
