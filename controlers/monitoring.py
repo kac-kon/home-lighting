@@ -1,15 +1,19 @@
 from threading import Thread, Event
-from typing import Optional, List, Any
+from typing import Optional, Any
 
 
 class Monitoring:
-    def __init__(self, function: Any, args: Optional[List[Any]] = None):
+    def __init__(self, function: Any, args=None):
+        if args is None:
+            args = []
         self._target = function
         self._args = args
         self._event = Event()
         self._thread = Thread(target=self._target, args=self._args)
 
-    def start_monitoring(self, function: Optional[Any] = None, args: Optional[List[Any]] = None):
+    def start_monitoring(self, function: Optional[Any] = None, args=None):
+        if args is None:
+            args = []
         self.set_target(function, args)
         if self.is_thread_alive():
             self.stop_monitoring()
@@ -24,7 +28,9 @@ class Monitoring:
             self.set_event()
             self.join_thread()
 
-    def set_target(self, function: Any = None, args: Optional[List[Any]] = None):
+    def set_target(self, function: Any = None, args=None):
+        if args is None:
+            args = []
         if function is not None:
             self._target = function
         self._args = args
