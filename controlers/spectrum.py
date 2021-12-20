@@ -128,13 +128,17 @@ class Spec:
 
     def set_properties(self, properties: Dict[str, int]):
         """
-        :param properties: required keys: sensitivity, inertia, frequency, fade_speed
+        :param properties: accepted keys: sensitivity, inertia, frequency, fade_speed
         :return: None
         """
-        self._sensitivity = properties['sensitivity']
-        self._inertia = properties['inertia']
-        self._analyzed_frequency = properties['frequency']
-        self._fade_speed = properties['fade_speed']
+        if properties.keys().__contains__('sensitivity'):
+            self._sensitivity = properties['sensitivity']
+        if properties.keys().__contains__('inertia'):
+            self._inertia = properties['inertia']
+        if properties.keys().__contains__('frequency'):
+            self._analyzed_frequency = properties['frequency']
+        if properties.keys().__contains__('fade_speed'):
+            self._fade_speed = properties['fade_speed']
 
     def get_properties(self) -> Dict[str, Any]:
         keys = ['autoLED', 'sensitivity', 'inertia', 'frequency', 'fade_speed']

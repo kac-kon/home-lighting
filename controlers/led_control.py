@@ -1,5 +1,6 @@
 from typing import List, Any, Dict
 
+from controlers.monitoring import Monitoring
 from initials import constants
 from initials.variables import LedVar
 
@@ -21,14 +22,20 @@ class LED:
                                         constants.LEDStrip.LED_INVERT,
                                         constants.LEDStrip.LED_BRIGHTNESS,
                                         constants.LEDStrip.LED_CHANNEL)
-        self._fade_exit_event = threading.Event()
-        self._fade_thread_loop = threading.Thread()
         self._strip.begin()
         random.seed()
+
+        self._animation_monitoring = Monitoring()
+        self._animation_speed = 1
+        self._animation_timeout = 0.05
 
         self._var.register_led_color_callback(self._catch_color_change)
         self._var.register_led_enable_callback(self._catch_enable_change)
         self._var.register_led_strip_callback(self._catch_strip_properties_change)
+
+    @property
+    def lights_on(self) -> bool:
+        return self._var.led5_on and self._var.led12_on
 
     @staticmethod
     def random_colors() -> List[int]:
@@ -92,7 +99,7 @@ class LED:
     def _fade_away(self) -> None:
         self._var.led_brightness = constants.INITIALS.LED_BRIGHTNESS
         time.sleep(0.1)
-        while self._var.led_brightness > 0 and not self._fade_exit_event.is_set():
+        while self._var.led_brightness > 0:
             if (self._var.led_brightness - self._var.fade_away_speed) < 0:
                 self._var.led_brightness = 0
             else:
@@ -118,13 +125,23 @@ class LED:
 
     def set_addressed(self, properties: Dict[str, int]) -> None:
         """
-        :param properties: required keys: direction, frequency, count
+        :param properties: accepted keys: direction, frequency, count
         :return: None
         """
-        direction: int = properties['direction']
-        frequency: int = properties['frequency']
-        self._var.led_strip_direction = direction * frequency
-        self._var.led_strip_display = properties['count']
+        if properties.keys().__contains__('direction') and properties.keys().__contains__('frequency'):
+            direction: int = properties['direction']
+            frequency: int = properties['frequency']
+            self._var.led_strip_direction = direction * frequency
+        elif properties.keys().__contains__('frequency'):
+            frequency: int = properties['frequency']
+            direction: int = -1 if self._var.led_strip_direction < 0 else 1
+            self._var.led_strip_direction = direction * frequency
+        elif properties.keys().__contains__('direction'):
+            direction: int = properties['direction']
+            frequency: int = abs(self._var.led_strip_direction)
+            self._var.led_strip_direction = direction * frequency
+        if properties.keys().__contains__('count'):
+            self._var.led_strip_display = properties['count']
 
     def get_led_state(self) -> Dict[str, Any]:
         brightness = self._var.led_brightness
@@ -143,3 +160,74 @@ class LED:
         values = [brightness, red, green, blue, led5, led12, addressed]
 
         return dict(zip(keys, values))
+
+    def animation_one(self) -> None:
+        """
+        pulse animation
+        """
+        print('anim one started')
+        while not self._animation_monitoring.is_event_set():
+            for i in range(0, 256, self._animation_speed):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_brightness(i)
+                time.sleep(self._animation_timeout)
+            for i in range(0, 256, self._animation_speed):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_brightness(255-i)
+                time.sleep(self._animation_timeout)
+
+    def animation_two(self) -> None:
+        """
+        change rgb color
+        """
+        print('anim two started')
+        while not self._animation_monitoring.is_event_set():
+            for i in range(0, 256, self._animation_speed):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_color([255-i, i, 0])
+            for i in range(0, 256, self._animation_speed):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_color([0, 255-i, i])
+            for i in range(0, 256, self._animation_speed):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_color([i, 0, 255-i])
+
+    def animation_three(self) -> None:
+        """
+        change rgb multicolor
+        """
+        print('anim three started')
+        while not self._animation_monitoring.is_event_set():
+            for i in range(0, 256, self._animation_speed):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_color([255-i, i, 255])
+            for i in range(0, 256, self._animation_speed):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_color([i, 255, 255-i])
+            for i in range(0, 256, self._animation_speed):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_color([255, 255-i, i])
+
+    def set_animation(self, number: int) -> None:
+        if number == 1:
+            self._animation_monitoring.start_monitoring(self.animation_one)
+        elif number == 2:
+            self._animation_monitoring.start_monitoring(self.animation_two)
+        elif number == 3:
+            self._animation_monitoring.start_monitoring(self.animation_three)
+        else:
+            print('stopped animations')
+            self._animation_monitoring.stop_monitoring()
+
+    def set_animation_speed(self, speed: int) -> None:
+        if speed < 1:
+            speed = 1
+        self._animation_speed = speed

@@ -1,7 +1,7 @@
-import time
-from threading import Thread, Event
-
 import RPi.GPIO as GPIO
+import time
+
+from controlers.monitoring import Monitoring
 from initials.constants import GPIO as INITS
 
 
@@ -11,8 +11,7 @@ class MotionSensor:
         self._motion = INITS.GPIO_MOTION
         GPIO.setup(self._motion, GPIO.IN)
 
-        self._monitoring_thread = Thread()
-        self._monitoring_event = Event()
+        self._monitoring = Monitoring(self._monitor_activity)
         self._callbacks = []
 
     def __del__(self):
@@ -21,14 +20,17 @@ class MotionSensor:
     def is_motion_active(self) -> bool:
         return GPIO.input(self._motion)
 
+    def is_monitored(self) -> bool:
+        return self._monitoring.is_thread_alive()
+
     def _monitor_activity(self) -> None:
-        while not self._monitoring_event.is_set():
+        while not self._monitoring.is_event_set():
             if self.is_motion_active():
                 self._notify_observer()
             time.sleep(.5)
 
     def _monitor_activity_timed(self, timeout: float) -> None:
-        while not self._monitoring_event.is_set():
+        while not self._monitoring.is_event_set():
             print(self.is_motion_active())
             if self.is_motion_active():
                 self._notify_observer()
@@ -44,29 +46,11 @@ class MotionSensor:
 
     def start_monitoring(self):
         print("starting monitoring motion")
-        if self._monitoring_thread.is_alive():
-            self._monitoring_event.set()
-            self._monitoring_thread.join()
-            self._monitoring_event.clear()
-            self._monitoring_thread = Thread(target=self._monitor_activity)
-            self._monitoring_thread.start()
-        else:
-            self._monitoring_event.clear()
-            self._monitoring_thread = Thread(target=self._monitor_activity)
-            self._monitoring_thread.start()
+        self._monitoring.start_monitoring()
         print("started monitoring motion")
 
     def start_timed_monitoring(self, timeout: float) -> None:
-        if self._monitoring_thread.is_alive():
-            self._monitoring_event.set()
-            self._monitoring_thread.join()
-            self._monitoring_event.clear()
-            self._monitoring_thread = Thread(target=self._monitor_activity_timed, args=[timeout])
-        else:
-            self._monitoring_event.clear()
-            self._monitoring_thread = Thread(target=self._monitor_activity_timed, args=[timeout])
-            self._monitoring_thread.run()
+        self._monitoring.start_monitoring(self._monitor_activity_timed, [timeout])
 
     def stop_monitoring(self):
-        self._monitoring_event.set()
-        self._monitoring_thread.join()
+        self._monitoring.stop_monitoring()

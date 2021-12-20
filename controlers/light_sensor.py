@@ -1,7 +1,7 @@
-from threading import Event, Thread
-
 import RPi.GPIO as GPIO
 import time
+
+from controlers.monitoring import Monitoring
 from initials.constants import GPIO as INITS
 
 
@@ -13,16 +13,18 @@ class LightSensor:
         self.value = 0
         self.lights_on = False
 
-        self._monitoring_thread = Thread()
-        self._monitoring_event = Event()
+        self._monitoring = Monitoring(self.read_time)
         self._callbacks = []
 
     def __del__(self):
         GPIO.cleanup()
 
+    def is_monitored(self) -> bool:
+        return self._monitoring.is_thread_alive()
+
     def read_time(self) -> None:
         print("light sensor read init")
-        while not self._monitoring_event.is_set():
+        while not self._monitoring.is_event_set():
             count = 0
             GPIO.setup(self._ldr, GPIO.OUT)
             GPIO.output(self._ldr, False)
@@ -34,7 +36,10 @@ class LightSensor:
                 time.sleep(.001)
 
             self.value = count
-            self.lights_on = False if count > 170 else True
+            lights_on = False if count > 170 else True
+            if lights_on != self.lights_on:
+                self.lights_on = lights_on
+                self._notify_observer()
             time.sleep(.3)
 
     def register_lighting_observer(self, callback: object) -> None:
@@ -46,19 +51,9 @@ class LightSensor:
 
     def start_monitoring(self):
         print("starting monitoring lights")
-        if self._monitoring_thread.is_alive():
-            self._monitoring_event.set()
-            self._monitoring_thread.join()
-            self._monitoring_event.clear()
-            self._monitoring_thread = Thread(target=self.read_time)
-            self._monitoring_thread.start()
-        else:
-            self._monitoring_event.clear()
-            self._monitoring_thread = Thread(target=self.read_time)
-            self._monitoring_thread.start()
+        self._monitoring.start_monitoring()
+        self._notify_observer()
         print("started monitoring lights")
 
-
     def stop_monitoring(self):
-        self._monitoring_event.set()
-        self._monitoring_thread.join()
+        self._monitoring.stop_monitoring()

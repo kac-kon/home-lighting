@@ -1,7 +1,7 @@
-from threading import Event, Thread
-
 import RPi.GPIO as GPIO
 import time
+
+from controlers.monitoring import Monitoring
 from initials.constants import GPIO as INITS
 
 
@@ -18,14 +18,16 @@ class DistanceSensor:
         GPIO.setup(self._echo, GPIO.IN)
 
         self._callbacks = []
-        self._monitoring_event = Event()
-        self._monitoring_thread = Thread()
+        self._monitoring = Monitoring(self.get_distance)
 
     def __del__(self):
         GPIO.cleanup()
 
+    def is_monitored(self) -> bool:
+        return self._monitoring.is_thread_alive()
+
     def get_distance(self):
-        while not self._monitoring_event.is_set():
+        while not self._monitoring.is_event_set():
             GPIO.output(self._trigger, True)
 
             time.sleep(0.00001)
@@ -59,18 +61,8 @@ class DistanceSensor:
 
     def start_monitoring(self):
         print("starting monitoring distance")
-        if self._monitoring_thread.is_alive():
-            self._monitoring_event.set()
-            self._monitoring_thread.join()
-            self._monitoring_event.clear()
-            self._monitoring_thread = Thread(target=self.get_distance)
-            self._monitoring_thread.start()
-        else:
-            self._monitoring_event.clear()
-            self._monitoring_thread = Thread(target=self.get_distance)
-            self._monitoring_thread.start()
+        self._monitoring.start_monitoring()
         print("started monitoring distance")
 
     def stop_monitoring(self):
-        self._monitoring_event.set()
-        self._monitoring_thread.join()
+        self._monitoring.stop_monitoring()

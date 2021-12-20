@@ -1,9 +1,7 @@
-import time
-from threading import Event, Thread
-
 from typing import Dict
 
 from controlers.led_control import LED
+from controlers.sensors import Sensors
 from controlers.spectrum import Spec
 from controlers.distance_sensor import DistanceSensor
 from controlers.light_sensor import LightSensor
@@ -17,17 +15,13 @@ class Orchestrator:
         self._distance = DistanceSensor()
         self._light = LightSensor()
         self._motion = MotionSensor()
+        self._sensors = Sensors(self, self._distance, self._light, self._motion)
 
         self.set_colors([255, 255, 255])
 
-        self._motion.register_motion_callback(self._motion_observer)
-        self._motion_event = Event()
-        self._motion_thread = Thread()
-        self._motion_start_time = 0
-        self._leds_off = True
-        self._motion_timer = 60 * 2
-
-        self._distance.register_distance_observer(self._distance_observer)
+    @property
+    def lights_on(self):
+        return self._led.lights_on
 
     def start_auto_led(self):
         self._spec.start_auto()
@@ -46,14 +40,14 @@ class Orchestrator:
 
     def set_addressed_properties(self, properties: Dict[str, int]) -> None:
         """
-        :param properties: required keys: direction, frequency, count
+        :param properties: accepted keys: direction, frequency, count
         :return: None
         """
         self._led.set_addressed(properties)
 
     def set_autoled_properties(self, properties: Dict[str, int]) -> None:
         """
-        :param properties: required keys: sensitivity, inertia, frequency, fade_speed
+        :param properties: accepted keys: sensitivity, inertia, frequency, fade_speed
         :return: None
         """
         self._spec.set_properties(properties)
@@ -62,73 +56,30 @@ class Orchestrator:
         return self._led.get_led_state()
 
     def start_monitoring(self) -> None:
-        print("starting monitoring")
-        self._distance.start_monitoring()
-        self._light.start_monitoring()
-        self._motion.start_monitoring()
-        print("started monitoring")
+        self._sensors.start_monitoring()
 
     def stop_monitoring(self) -> None:
-        self._distance.stop_monitoring()
-        self._light.stop_monitoring()
-        self._motion.stop_monitoring()
+        self._sensors.stop_monitoring()
 
-    def lights_up(self):
-        self._led.set_brightness(255)
-        self._leds_off = False
+    def lights_up(self) -> None:
+        self.set_strip_enable(0, True)
+        self.set_strip_enable(1, True)
 
-    def lights_down(self):
-        self._led.set_brightness(0)
-        self._leds_off = True
+    def lights_down(self) -> None:
+        self.set_strip_enable(0, False)
+        self.set_strip_enable(1, False)
 
-    def _wait_for_no_motion(self):
-        count = 0
-        print('timer started')
-        while not self._motion_event.is_set():
-            count += 1
-            time.sleep(.5)
-            print(count)
-            if count >= self._motion_timer:
-                break
-        if count >= self._motion_timer:
+    def switch_leds(self) -> None:
+        if self.lights_on:
             self.lights_down()
-
-    def _motion_observer(self) -> None:
-        print('motion detected')
-        if not self._light.lights_on:
-            if self._leds_off and not self._motion_thread.is_alive():
-                self.lights_up()
-            if self._motion_thread.is_alive():
-                self._motion_event.set()
-                self._motion_thread.join()
-                self._motion_event.clear()
-            self._motion_thread = Thread(target=self._wait_for_no_motion)
-            self._motion_start_time = time.time()
-            self._motion_thread.start()
-        elif self._light.lights_on:
-            self._motion_event.set()
-            if self._motion_thread.is_alive():
-                self._motion_thread.join()
-            self._motion_event.clear()
-            self.lights_down()
-
-    def switch_leds(self):
-        if self._leds_off:
-            print('up up')
-            self.lights_up()
         else:
-            print('going dark')
-            self.lights_down()
+            self.lights_up()
 
-    def _distance_observer(self) -> None:
-        dist = self._distance.distance
-        print(f'distance changed to: {dist}')
-        if 5 <= dist <= 10:
-            self.switch_leds()
-        elif 15 <= dist <= 20:
-            self._led.set_color([255, 0, 0])
-        elif 20 < dist <= 25:
-            self._led.set_color([0, 255, 0])
-        elif 25 < dist <= 30:
-            self._led.set_color([0, 0, 255])
+    def set_motion_timeout(self, timeout: int) -> None:
+        self._sensors.set_motion_timeout(timeout)
 
+    def set_animation(self, number: int) -> None:
+        self._led.set_animation(number)
+
+    def set_animation_speed(self, speed: int) -> None:
+        self._led.set_animation_speed(speed)
