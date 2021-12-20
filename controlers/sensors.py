@@ -59,10 +59,11 @@ class Sensors:
     def _distance_observer(self) -> None:
         dist = self._distance_sensor.distance
         print(f'distance changed to: {dist}')
-        if 5 <= dist <= 10:
+        if dist <= 10:
             self._light_sensor.stop_monitoring()
             self._motion_sensor.stop_monitoring()
             self._orchestrator.switch_leds()
+            print(f'lights on: {self._orchestrator.lights_on}')
         elif 15 <= dist <= 25:
             self._orchestrator.set_colors([255, 0, 0])
         elif 25 < dist <= 32:

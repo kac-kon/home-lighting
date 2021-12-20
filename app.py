@@ -9,4 +9,4 @@ if __name__ == "__main__":
     orchestrator = Orchestrator()
     api = Api(app, orchestrator)
 
-    app.run(host='0.0.0.0', port=420)
+    app.run(host='0.0.0.0', port=5000)
