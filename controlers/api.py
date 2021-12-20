@@ -45,7 +45,7 @@ class Api:
         Required query params:
         'enable'
         """
-        if bool(str(request.args['enable'])):
+        if bool(request.args['enable']):
             self.orchestrator.start_auto_led()
         else:
             self.orchestrator.stop_auto_led()
@@ -87,13 +87,14 @@ class Api:
             else:
                 print('false')
                 self.orchestrator.stop_monitoring()
-        if request.args.keys().__contains__('timeout'):
+        if request.args.__contains__('timeout'):
             print('got timeout')
             self.orchestrator.set_motion_timeout(int(request.args['timeout']))
         return jsonify({})
 
     def set_animations(self, number: int):
-        if request.args.keys().__contains__('speed'):
+        if request.args.__contains__('speed'):
             self.orchestrator.set_animation_speed(float(request.args['speed']))
+        print(number)
         self.orchestrator.set_animation(number)
         return jsonify({})
