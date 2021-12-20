@@ -3,7 +3,7 @@ from typing import Optional, Any, List
 
 
 class Monitoring:
-    def __init__(self, function: Any, args: Optional[List[Any]] = None):
+    def __init__(self, function: Optional[Any] = None, args: Optional[List[Any]] = None):
         if args is None:
             args = []
         self._target = function

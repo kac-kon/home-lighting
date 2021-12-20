@@ -52,6 +52,7 @@ class LightSensor:
     def start_monitoring(self):
         print("starting monitoring lights")
         self._monitoring.start_monitoring()
+        self._notify_observer()
         print("started monitoring lights")
 
     def stop_monitoring(self):

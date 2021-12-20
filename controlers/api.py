@@ -20,6 +20,10 @@ class Api:
                               methods=['POST'])
         self.app.add_url_rule('/state/autoled/properties', 'autoledProperties', self.set_auto_led_properties,
                               methods=['POST'])
+        self.app.add_url_rule('/state/sensors', 'sensorsState', self.set_monitoring,
+                              methods=['POST'])
+        self.app.add_url_rule('/state/animations/<int:number>', 'setAnimations', self.set_animations,
+                              methods=['POST'])
 
     def set_colors(self):
         """
@@ -63,3 +67,23 @@ class Api:
         for key in request.args:
             d[key] = int(request.args[key])
         self.orchestrator.set_autoled_properties(d)
+
+    def set_monitoring(self) -> None:
+        """
+        optional query params:
+        'enable', 'timeout'
+        :return:
+        """
+        if request.args.keys().__contains__('enable'):
+            state = bool(request.args.get('enable'))
+            if state:
+                self.orchestrator.start_monitoring()
+            else:
+                self.orchestrator.stop_monitoring()
+        if request.args.keys().__contains__('timeout'):
+            self.orchestrator.set_motion_timeout(int(request.args['timeout']))
+
+    def set_animations(self, number: int) -> None:
+        if request.args.keys().__contains__('speed'):
+            self.orchestrator.set_animation_speed(float(request.args['speed']))
+        self.orchestrator.set_animation(number)

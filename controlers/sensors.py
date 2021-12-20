@@ -61,6 +61,8 @@ class Sensors:
         print(f'distance changed to: {dist}')
         if 5 <= dist <= 10:
             self._orchestrator.switch_leds()
+            if self._motion_sensor.is_monitored():
+                self._motion_sensor.stop_monitoring()
         elif 15 <= dist <= 25:
             self._orchestrator.set_colors([255, 0, 0])
         elif 25 < dist <= 32:
@@ -69,3 +71,23 @@ class Sensors:
             self._orchestrator.set_colors([0, 0, 255])
         elif 40 < dist <= 48:
             self._orchestrator.set_colors([255, 255, 255])
+        elif 60 < dist <= 70:
+            if not self._motion_sensor.is_monitored():
+                self._orchestrator.set_colors([255, 255, 255])
+                time.sleep(.5)
+                self._motion_sensor.start_monitoring()
+                self._orchestrator.set_colors([127, 127, 127])
+                time.sleep(.5)
+                self._orchestrator.set_colors([255, 255, 255])
+
+    def set_motion_timeout(self, timeout: int) -> None:
+        self._motion_timeout = timeout
+
+    def stop_monitoring(self) -> None:
+        self._light_sensor.stop_monitoring()
+        self._distance_sensor.stop_monitoring()
+        self._light_sensor.stop_monitoring()
+
+    def start_monitoring(self) -> None:
+        self._light_sensor.start_monitoring()
+        self._distance_sensor.start_monitoring()

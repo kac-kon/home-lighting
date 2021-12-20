@@ -56,25 +56,30 @@ class Orchestrator:
         return self._led.get_led_state()
 
     def start_monitoring(self) -> None:
-        self._distance.start_monitoring()
-        self._light.start_monitoring()
-        # self._motion.start_monitoring()
+        self._sensors.start_monitoring()
 
     def stop_monitoring(self) -> None:
-        self._distance.stop_monitoring()
-        self._light.stop_monitoring()
-        self._motion.stop_monitoring()
+        self._sensors.stop_monitoring()
 
-    def lights_up(self):
+    def lights_up(self) -> None:
         self.set_strip_enable(0, True)
         self.set_strip_enable(1, True)
 
-    def lights_down(self):
+    def lights_down(self) -> None:
         self.set_strip_enable(0, False)
         self.set_strip_enable(1, False)
 
-    def switch_leds(self):
+    def switch_leds(self) -> None:
         if self.lights_on:
             self.lights_up()
         else:
             self.lights_down()
+
+    def set_motion_timeout(self, timeout: int) -> None:
+        self._sensors.set_motion_timeout(timeout)
+
+    def set_animation(self, number: int) -> None:
+        self._led.set_animation(number)
+
+    def set_animation_speed(self, timeout: float) -> None:
+        self._led.set_animation_speed(timeout)

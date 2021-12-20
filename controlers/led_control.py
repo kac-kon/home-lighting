@@ -1,5 +1,6 @@
 from typing import List, Any, Dict
 
+from controlers.monitoring import Monitoring
 from initials import constants
 from initials.variables import LedVar
 
@@ -23,6 +24,9 @@ class LED:
                                         constants.LEDStrip.LED_CHANNEL)
         self._strip.begin()
         random.seed()
+
+        self._animation_monitoring = Monitoring()
+        self._animation_speed = 0.05
 
         self._var.register_led_color_callback(self._catch_color_change)
         self._var.register_led_enable_callback(self._catch_enable_change)
@@ -155,3 +159,68 @@ class LED:
         values = [brightness, red, green, blue, led5, led12, addressed]
 
         return dict(zip(keys, values))
+
+    def animation_one(self) -> None:
+        """
+        pulse animation
+        """
+        while not self._animation_monitoring.is_event_set():
+            for i in range(0, 256, 1):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_brightness(i)
+                time.sleep(self._animation_speed)
+            for i in range(0, 256, 1):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_brightness(255-i)
+                time.sleep(self._animation_speed)
+
+    def animation_two(self) -> None:
+        """
+        change rgb color
+        """
+        while not self._animation_monitoring.is_event_set():
+            for i in range(0, 256, 1):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_color([255-i, i, 0])
+            for i in range(0, 256, 1):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_color([0, 255-i, i])
+            for i in range(0, 256, 1):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_color([i, 0, 255-i])
+
+    def animation_three(self) -> None:
+        """
+        change rgb multicolor
+        """
+        while not self._animation_monitoring.is_event_set():
+            for i in range(0, 256, 1):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_color([255-i, i, 255])
+            for i in range(0, 256, 1):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_color([255, 255-i, i])
+            for i in range(0, 256, 1):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_color([i, 255, 255-i])
+
+    def set_animation(self, number: int) -> None:
+        if number == 1:
+            self._animation_monitoring.start_monitoring(self.animation_one)
+        elif number == 2:
+            self._animation_monitoring.start_monitoring(self.animation_two)
+        elif number == 3:
+            self._animation_monitoring.start_monitoring(self.animation_three)
+        else:
+            self._animation_monitoring.stop_monitoring()
+
+    def set_animation_speed(self, timeout: float) -> None:
+        self._animation_speed = timeout
