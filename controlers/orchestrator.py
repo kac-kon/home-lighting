@@ -71,9 +71,9 @@ class Orchestrator:
 
     def switch_leds(self) -> None:
         if self.lights_on:
-            self.lights_up()
-        else:
             self.lights_down()
+        else:
+            self.lights_up()
 
     def set_motion_timeout(self, timeout: int) -> None:
         self._sensors.set_motion_timeout(timeout)
