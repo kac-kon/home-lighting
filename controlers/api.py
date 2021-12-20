@@ -75,11 +75,11 @@ class Api:
 
     def set_monitoring(self):
         """
+        /state/sensors
         optional query params:
         'enable', 'timeout'
-        :return:
         """
-        if request.args.keys().__contains__('enable'):
+        if request.args.__contains__('enable'):
             state = bool(request.args.get('enable'))
             if state:
                 print('true')

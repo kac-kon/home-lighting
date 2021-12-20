@@ -50,7 +50,7 @@ class Sensors:
     def _motion_observer(self) -> None:
         print('motion detected')
         print(f'lights on: {self._orchestrator.lights_on}')
-        if not self._orchestrator.lights_on and not self._movement_monitoring.is_thread_alive():
+        if not self._orchestrator.lights_on:
             self._orchestrator.lights_up()
         if self._movement_monitoring.is_thread_alive():
             self._movement_monitoring.stop_monitoring()
