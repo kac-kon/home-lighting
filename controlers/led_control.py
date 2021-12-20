@@ -26,7 +26,8 @@ class LED:
         random.seed()
 
         self._animation_monitoring = Monitoring()
-        self._animation_speed = 0.05
+        self._animation_speed = 1
+        self._animation_timeout = 0.05
 
         self._var.register_led_color_callback(self._catch_color_change)
         self._var.register_led_enable_callback(self._catch_enable_change)
@@ -166,16 +167,16 @@ class LED:
         """
         print('anim one started')
         while not self._animation_monitoring.is_event_set():
-            for i in range(0, 256, 1):
+            for i in range(0, 256, self._animation_speed):
                 if self._animation_monitoring.is_event_set():
                     break
                 self.set_brightness(i)
-                time.sleep(self._animation_speed)
-            for i in range(0, 256, 1):
+                time.sleep(self._animation_timeout)
+            for i in range(0, 256, self._animation_speed):
                 if self._animation_monitoring.is_event_set():
                     break
                 self.set_brightness(255-i)
-                time.sleep(self._animation_speed)
+                time.sleep(self._animation_timeout)
 
     def animation_two(self) -> None:
         """
@@ -183,15 +184,15 @@ class LED:
         """
         print('anim two started')
         while not self._animation_monitoring.is_event_set():
-            for i in range(0, 256, 1):
+            for i in range(0, 256, self._animation_speed):
                 if self._animation_monitoring.is_event_set():
                     break
                 self.set_color([255-i, i, 0])
-            for i in range(0, 256, 1):
+            for i in range(0, 256, self._animation_speed):
                 if self._animation_monitoring.is_event_set():
                     break
                 self.set_color([0, 255-i, i])
-            for i in range(0, 256, 1):
+            for i in range(0, 256, self._animation_speed):
                 if self._animation_monitoring.is_event_set():
                     break
                 self.set_color([i, 0, 255-i])
@@ -202,18 +203,18 @@ class LED:
         """
         print('anim three started')
         while not self._animation_monitoring.is_event_set():
-            for i in range(0, 256, 1):
+            for i in range(0, 256, self._animation_speed):
                 if self._animation_monitoring.is_event_set():
                     break
                 self.set_color([255-i, i, 255])
-            for i in range(0, 256, 1):
-                if self._animation_monitoring.is_event_set():
-                    break
-                self.set_color([255, 255-i, i])
-            for i in range(0, 256, 1):
+            for i in range(0, 256, self._animation_speed):
                 if self._animation_monitoring.is_event_set():
                     break
                 self.set_color([i, 255, 255-i])
+            for i in range(0, 256, self._animation_speed):
+                if self._animation_monitoring.is_event_set():
+                    break
+                self.set_color([255, 255-i, i])
 
     def set_animation(self, number: int) -> None:
         if number == 1:
@@ -226,5 +227,7 @@ class LED:
             print('stopped animations')
             self._animation_monitoring.stop_monitoring()
 
-    def set_animation_speed(self, timeout: float) -> None:
-        self._animation_speed = timeout
+    def set_animation_speed(self, speed: int) -> None:
+        if speed < 1:
+            speed = 1
+        self._animation_speed = speed

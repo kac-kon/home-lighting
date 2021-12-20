@@ -86,7 +86,7 @@ class Sensors:
     def stop_monitoring(self) -> None:
         self._light_sensor.stop_monitoring()
         self._distance_sensor.stop_monitoring()
-        self._light_sensor.stop_monitoring()
+        self._motion_sensor.stop_monitoring()
 
     def start_monitoring(self) -> None:
         self._light_sensor.start_monitoring()

@@ -81,5 +81,5 @@ class Orchestrator:
     def set_animation(self, number: int) -> None:
         self._led.set_animation(number)
 
-    def set_animation_speed(self, timeout: float) -> None:
-        self._led.set_animation_speed(timeout)
+    def set_animation_speed(self, speed: int) -> None:
+        self._led.set_animation_speed(speed)
