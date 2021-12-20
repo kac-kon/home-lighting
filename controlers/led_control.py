@@ -164,6 +164,7 @@ class LED:
         """
         pulse animation
         """
+        print('anim one started')
         while not self._animation_monitoring.is_event_set():
             for i in range(0, 256, 1):
                 if self._animation_monitoring.is_event_set():
@@ -180,6 +181,7 @@ class LED:
         """
         change rgb color
         """
+        print('anim two started')
         while not self._animation_monitoring.is_event_set():
             for i in range(0, 256, 1):
                 if self._animation_monitoring.is_event_set():
@@ -198,6 +200,7 @@ class LED:
         """
         change rgb multicolor
         """
+        print('anim three started')
         while not self._animation_monitoring.is_event_set():
             for i in range(0, 256, 1):
                 if self._animation_monitoring.is_event_set():
@@ -220,6 +223,7 @@ class LED:
         elif number == 3:
             self._animation_monitoring.start_monitoring(self.animation_three)
         else:
+            print('stopped animations')
             self._animation_monitoring.stop_monitoring()
 
     def set_animation_speed(self, timeout: float) -> None:
