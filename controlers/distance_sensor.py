@@ -18,7 +18,7 @@ class DistanceSensor:
         GPIO.setup(self._echo, GPIO.IN)
 
         self._callbacks = []
-        self._monitoring = Monitoring(self.get_distance)
+        self._monitoring = Monitoring(self._get_distance)
 
     def __del__(self):
         GPIO.cleanup()
@@ -26,7 +26,7 @@ class DistanceSensor:
     def is_monitored(self) -> bool:
         return self._monitoring.is_thread_alive()
 
-    def get_distance(self):
+    def _get_distance(self):
         while not self._monitoring.is_event_set():
             GPIO.output(self._trigger, True)
 

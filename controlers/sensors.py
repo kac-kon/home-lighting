@@ -23,7 +23,7 @@ class Sensors:
 
         self._movement_monitoring = Monitoring(self._wait_for_no_motion)
 
-        self._motion_sensor.register_motion_callback(self._motion_observer)
+        self._motion_sensor.register_motion_observer(self._motion_observer)
 
         self._distance_sensor.register_distance_observer(self._distance_observer)
 

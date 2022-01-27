@@ -20,22 +20,22 @@ class Orchestrator:
         self.set_colors([255, 255, 255])
 
     @property
-    def lights_on(self):
+    def lights_on(self) -> bool:
         return self._led.lights_on
 
-    def start_auto_led(self):
+    def start_auto_led(self) -> None:
         self._spec.start_auto()
 
-    def stop_auto_led(self):
+    def stop_auto_led(self) -> None:
         self._spec.stop_auto()
 
-    def set_colors(self, colors: list):
+    def set_colors(self, colors: list) -> None:
         self._led.set_color(colors)
 
-    def set_strip_enable(self, strip: int, state: bool):
+    def set_strip_enable(self, strip: int, state: bool) -> None:
         self._led.set_enable_state(strip, state)
 
-    def set_strip_brightness(self, brightness: int):
+    def set_strip_brightness(self, brightness: int) -> None:
         self._led.set_brightness(brightness)
 
     def set_addressed_properties(self, properties: Dict[str, int]) -> None:

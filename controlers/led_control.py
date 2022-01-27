@@ -6,7 +6,6 @@ from initials.variables import LedVar
 
 import time
 import pigpio
-import threading
 import random
 from rpi_ws281x import *
 
@@ -167,7 +166,7 @@ class LED:
 
         return dict(zip(keys, values))
 
-    def animation_one(self) -> None:
+    def _animation_one(self) -> None:
         """
         pulse animation
         """
@@ -184,7 +183,7 @@ class LED:
                 self.set_brightness(255-i)
                 time.sleep(self._animation_timeout)
 
-    def animation_two(self) -> None:
+    def _animation_two(self) -> None:
         """
         change rgb color
         """
@@ -203,7 +202,7 @@ class LED:
                     break
                 self.set_color([i, 0, 255-i])
 
-    def animation_three(self) -> None:
+    def _animation_three(self) -> None:
         """
         change rgb multicolor
         """
@@ -225,11 +224,11 @@ class LED:
     def set_animation(self, number: int) -> None:
         self._animation_number = number
         if number == 1:
-            self._animation_monitoring.start_monitoring(self.animation_one)
+            self._animation_monitoring.start_monitoring(self._animation_one)
         elif number == 2:
-            self._animation_monitoring.start_monitoring(self.animation_two)
+            self._animation_monitoring.start_monitoring(self._animation_two)
         elif number == 3:
-            self._animation_monitoring.start_monitoring(self.animation_three)
+            self._animation_monitoring.start_monitoring(self._animation_three)
         else:
             print('stopped animations')
             self._animation_monitoring.stop_monitoring()

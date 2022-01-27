@@ -29,15 +29,7 @@ class MotionSensor:
                 self._notify_observer()
             time.sleep(.5)
 
-    def _monitor_activity_timed(self, timeout: float) -> None:
-        while not self._monitoring.is_event_set():
-            print(self.is_motion_active())
-            if self.is_motion_active():
-                self._notify_observer()
-                time.sleep(timeout)
-            time.sleep(.5)
-
-    def register_motion_callback(self, callback: object) -> None:
+    def register_motion_observer(self, callback: object) -> None:
         self._callbacks.append(callback)
 
     def _notify_observer(self) -> None:
@@ -48,9 +40,6 @@ class MotionSensor:
         print("starting monitoring motion")
         self._monitoring.start_monitoring()
         print("started monitoring motion")
-
-    def start_timed_monitoring(self, timeout: float) -> None:
-        self._monitoring.start_monitoring(self._monitor_activity_timed, [timeout])
 
     def stop_monitoring(self):
         self._monitoring.stop_monitoring()

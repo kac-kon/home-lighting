@@ -13,7 +13,7 @@ class LightSensor:
         self.value = 0
         self.lights_on = False
 
-        self._monitoring = Monitoring(self.read_time)
+        self._monitoring = Monitoring(self._read_time)
         self._callbacks = []
 
     def __del__(self):
@@ -22,7 +22,7 @@ class LightSensor:
     def is_monitored(self) -> bool:
         return self._monitoring.is_thread_alive()
 
-    def read_time(self) -> None:
+    def _read_time(self) -> None:
         print("light sensor read init")
         while not self._monitoring.is_event_set():
             count = 0

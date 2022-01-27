@@ -27,9 +27,8 @@ class LedVar:
 
     @led12_on.setter
     def led12_on(self, new_value):
-        led_strip = 1
         self._led12_on = new_value
-        self._notify_led_enable_observer(led_strip, new_value)
+        self._notify_led_enable_observer()
 
     @property
     def led5_on(self):
@@ -37,9 +36,8 @@ class LedVar:
 
     @led5_on.setter
     def led5_on(self, new_value):
-        led_strip = 0
         self._led5_on = new_value
-        self._notify_led_enable_observer(led_strip, new_value)
+        self._notify_led_enable_observer()
 
     @property
     def led_brightness(self):
@@ -48,7 +46,7 @@ class LedVar:
     @led_brightness.setter
     def led_brightness(self, new_value):
         self._led_brightness = new_value
-        self._notify_led_color_observer(new_value)
+        self._notify_led_color_observer()
 
     @property
     def led_red(self):
@@ -57,7 +55,7 @@ class LedVar:
     @led_red.setter
     def led_red(self, new_value):
         self._led_red = new_value
-        self._notify_led_color_observer(new_value)
+        self._notify_led_color_observer()
 
     @property
     def led_green(self):
@@ -66,7 +64,7 @@ class LedVar:
     @led_green.setter
     def led_green(self, new_value):
         self._led_green = new_value
-        self._notify_led_color_observer(new_value)
+        self._notify_led_color_observer()
 
     @property
     def led_blue(self):
@@ -75,7 +73,7 @@ class LedVar:
     @led_blue.setter
     def led_blue(self, new_value):
         self._led_blue = new_value
-        self._notify_led_color_observer(new_value)
+        self._notify_led_color_observer()
 
     @property
     def led_strip_direction(self):
@@ -90,7 +88,7 @@ class LedVar:
         elif new_value == 0:
             new_value = 1
         self._led_strip_direction = new_value
-        self._notify_led_strip_properties_observer(new_value)
+        self._notify_led_strip_properties_observer()
 
     @property
     def led_strip_display(self):
@@ -101,23 +99,23 @@ class LedVar:
         if new_value > constants.LEDStrip.LED_COUNT:
             new_value = constants.LEDStrip.LED_COUNT
         self._led_strip_display = new_value
-        self._notify_led_strip_properties_observer(new_value)
+        self._notify_led_strip_properties_observer()
 
-    def _notify_led_enable_observer(self, strip, new_value):
+    def _notify_led_enable_observer(self):
         for callback in self._led_enable_callbacks:
             callback()
 
     def register_led_enable_callback(self, callback):
         self._led_enable_callbacks.append(callback)
 
-    def _notify_led_color_observer(self, new_value):
+    def _notify_led_color_observer(self):
         for callback in self._led_color_callbacks:
             callback()
 
     def register_led_color_callback(self, callback):
         self._led_color_callbacks.append(callback)
 
-    def _notify_led_strip_properties_observer(self, new_value):
+    def _notify_led_strip_properties_observer(self):
         for callback in self._led_strip_callbacks:
             callback()
 

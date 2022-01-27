@@ -18,8 +18,6 @@ class Spec:
         self.weighting = AUDIO.WEIGHTING
         self.frequencies = AUDIO.FREQUENCIES
         self.sensitivity = np.array(AUDIO.SENSITIVENESS)
-        self._spec_thread = threading.Thread()
-        self._exit_event = threading.Event()
         self._auto_thread = threading.Thread()
         self._auto_exit_event = threading.Event()
         self._fading_thread = threading.Thread()
@@ -69,11 +67,6 @@ class Spec:
         data = self.stream.read(AUDIO.CHUNK, exception_on_overflow=False)
         self._calculate_levels(data)
 
-    def _start_monitoring(self) -> None:
-        while not self._exit_event.is_set():
-            self._catch_bit()
-            self.spec_matrix = self.matrix
-
     def _start_auto(self) -> None:
         while not self._auto_exit_event.is_set():
             self._catch_bit()
@@ -103,15 +96,6 @@ class Spec:
             self._led.set_brightness(brightness)
             brightness -= self._fade_speed
         self._led.set_brightness(0)
-
-    def start_monitoring(self) -> None:
-        self._exit_event.clear()
-        self._spec_thread = threading.Thread(target=self._start_monitoring)
-        self._spec_thread.start()
-
-    def stop_monitoring(self) -> None:
-        self._exit_event.set()
-        self._spec_thread.join()
 
     def start_auto(self) -> None:
         if self._auto_thread.is_alive():
