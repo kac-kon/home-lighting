@@ -28,6 +28,7 @@ class LED:
         self._animation_monitoring = Monitoring()
         self._animation_speed = 1
         self._animation_timeout = 0.05
+        self._animation_number = 0
 
         self._var.register_led_color_callback(self._catch_color_change)
         self._var.register_led_enable_callback(self._catch_enable_change)
@@ -154,10 +155,15 @@ class LED:
         direction = -1 if self._var.led_strip_direction < 0 else 1
         led_freq = abs(self._var.led_strip_direction)
         led_count = self._var.led_strip_display
-        addressed = [{"direction": direction, "frequency": led_freq, "count": led_count}]
+        addressed = {"direction": direction, "frequency": led_freq, "count": led_count}
 
-        keys = ["brightness", "red", "green", "blue", "led5", "led12", "addressed"]
-        values = [brightness, red, green, blue, led5, led12, addressed]
+        enabled = True if self._animation_monitoring.is_thread_alive() else False
+        number = self._animation_number
+        speed = self._animation_speed
+        animation = {"enabled": enabled, "number": number, "speed": speed}
+
+        keys = ["brightness", "red", "green", "blue", "led5", "led12", "addressed", "animation"]
+        values = [brightness, red, green, blue, led5, led12, addressed, animation]
 
         return dict(zip(keys, values))
 
@@ -217,6 +223,7 @@ class LED:
                 self.set_color([255, 255-i, i])
 
     def set_animation(self, number: int) -> None:
+        self._animation_number = number
         if number == 1:
             self._animation_monitoring.start_monitoring(self.animation_one)
         elif number == 2:

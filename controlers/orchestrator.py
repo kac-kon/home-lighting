@@ -52,8 +52,17 @@ class Orchestrator:
         """
         self._spec.set_properties(properties)
 
+    def get_autoled_properties(self) -> dict:
+        return self._spec.get_properties()
+
     def get_led_state(self) -> dict:
         return self._led.get_led_state()
+
+    def get_state(self) -> dict:
+        state = self.get_led_state()
+        state['autoLED'] = self.get_autoled_properties()
+
+        return state
 
     def start_monitoring(self) -> None:
         self._sensors.start_monitoring()

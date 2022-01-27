@@ -141,9 +141,10 @@ class Spec:
             self._fade_speed = properties['fade_speed']
 
     def get_properties(self) -> Dict[str, Any]:
-        keys = ['autoLED', 'sensitivity', 'inertia', 'frequency', 'fade_speed']
+        keys = ['enabled', 'sensitivity', 'inertia', 'frequency', 'fade_speed']
         values = [self._auto_thread.is_alive(),
                   self._sensitivity,
+                  self._inertia,
                   self._analyzed_frequency,
                   self._fade_speed]
         return dict(zip(keys, values))
