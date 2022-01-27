@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 
 from controlers.orchestrator import Orchestrator
-from controlers.state import State
 
 
 class Api:
