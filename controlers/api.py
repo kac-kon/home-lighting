@@ -29,7 +29,7 @@ class Api:
                               methods=['POST'])
 
     def get_state(self):
-        return jsonify(self.orchestrator.get_led_state())
+        return jsonify(self.orchestrator.get_state())
 
     def set_colors(self):
         """
@@ -40,11 +40,11 @@ class Api:
         green = int(request.args['g'])
         blue = int(request.args['b'])
         self.orchestrator.set_colors([red, green, blue])
-        return jsonify(self.orchestrator.get_led_state())
+        return jsonify(self.orchestrator.get_state())
 
     def set_brightness(self, brightness):
         self.orchestrator.set_strip_brightness(brightness)
-        return jsonify(self.orchestrator.get_led_state())
+        return jsonify(self.orchestrator.get_state())
 
     def set_auto_led(self):
         """
@@ -55,7 +55,7 @@ class Api:
             self.orchestrator.start_auto_led()
         else:
             self.orchestrator.stop_auto_led()
-        return jsonify(self.orchestrator.get_led_state())
+        return jsonify(self.orchestrator.get_state())
 
     def set_addressed_direction(self):
         """
@@ -66,7 +66,7 @@ class Api:
         for key in request.args:
             d[key] = int(request.args[key])
         self.orchestrator.set_addressed_properties(d)
-        return jsonify(self.orchestrator.get_led_state())
+        return jsonify(self.orchestrator.get_state())
 
     def set_auto_led_properties(self):
         """
@@ -77,7 +77,7 @@ class Api:
         for key in request.args:
             d[key] = int(request.args[key])
         self.orchestrator.set_autoled_properties(d)
-        return jsonify(self.orchestrator.get_led_state())
+        return jsonify(self.orchestrator.get_state())
 
     def set_monitoring(self):
         """
@@ -93,10 +93,10 @@ class Api:
                 self.orchestrator.stop_monitoring()
         if request.args.__contains__('timeout'):
             self.orchestrator.set_motion_timeout(int(request.args['timeout']))
-        return jsonify(self.orchestrator.get_led_state())
+        return jsonify(self.orchestrator.get_state())
 
     def set_animations(self, number: int):
         if request.args.__contains__('speed'):
             self.orchestrator.set_animation_speed(int(request.args['speed']))
         self.orchestrator.set_animation(number)
-        return jsonify(self.orchestrator.get_led_state())
+        return jsonify(self.orchestrator.get_state())
