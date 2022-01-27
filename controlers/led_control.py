@@ -155,12 +155,12 @@ class LED:
         direction = -1 if self._var.led_strip_direction < 0 else 1
         led_freq = abs(self._var.led_strip_direction)
         led_count = self._var.led_strip_display
-        addressed = [{"direction": direction, "frequency": led_freq, "count": led_count}]
+        addressed = {"direction": direction, "frequency": led_freq, "count": led_count}
 
         enabled = True if self._animation_monitoring.is_thread_alive() else False
         number = self._animation_number
         speed = self._animation_speed
-        animation = [{"enabled": enabled, "number": number, "speed": speed}]
+        animation = {"enabled": enabled, "number": number, "speed": speed}
 
         keys = ["brightness", "red", "green", "blue", "led5", "led12", "addressed", "animation"]
         values = [brightness, red, green, blue, led5, led12, addressed, animation]
