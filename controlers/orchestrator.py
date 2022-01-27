@@ -59,10 +59,10 @@ class Orchestrator:
         return self._led.get_led_state()
 
     def get_state(self) -> dict:
-        led_state = self.get_led_state()
-        autoled_state = self.get_autoled_properties()
+        state = self.get_led_state()
+        state['autoLED'] = self.get_autoled_properties()
 
-        return {**led_state, **autoled_state}
+        return state
 
     def start_monitoring(self) -> None:
         self._sensors.start_monitoring()
