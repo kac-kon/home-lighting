@@ -2,36 +2,37 @@ class State:
 
     def __init__(
             self,
-            brightness=0,
-            red=0,
-            green=0,
-            blue=0,
-            led1=True,
-            led2=True,
-            auto_led=False,
-            timer_enabled=False,
-            timer_time=-1,
-            led_direction=0,
-            led_freq=1,
-            led_count=180
+            led_state: dict
     ):
-        self.brightness = brightness
-        self.red = red
-        self.green = green
-        self.blue = blue
-        self.led1 = led1
-        self.led2 = led2
-        self.leds = True if (self.led1 == self.led2 is True) else False
-        self.auto_led = auto_led
-        self.timer = [{"enabled": timer_enabled, "time": timer_time}]
-        self.addressed = [{"direction": led_direction, "frequency": led_freq, "count": led_count}]
+        self.state = led_state
 
 
 if __name__ == "__main__":
-    state = State(255, 127, 127, 127, True, True, True, True)
+    brightness = 255
+    red = 127
+    green = 0
+    blue = 60
+    led5 = True
+    led12 = False
+
+    direction = -1
+    led_freq = 2
+    led_count = 180
+    addressed = [{"direction": direction, "frequency": led_freq, "count": led_count}]
+
+    enabled = False
+    number = 0
+    speed = 2
+    animation = [{"enabled": enabled, "number": number, "speed": speed}]
+
+    keys = ["brightness", "red", "green", "blue", "led5", "led12", "addressed", "animation"]
+    values = [brightness, red, green, blue, led5, led12, addressed, animation]
+
+    st = dict(zip(keys, values))
+    state = State(st)
     print(state.__dict__)
 
-    a = {"1": 2, "2": 3}
-    b = {"3": 0}
-    c = {**a, **b}
-    print(c)
+    # a = {"1": 2, "2": 3}
+    # b = {"3": 0}
+    # c = {**a, **b}
+    # print(c)
