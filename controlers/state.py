@@ -18,12 +18,12 @@ if __name__ == "__main__":
     direction = -1
     led_freq = 2
     led_count = 180
-    addressed = [{"direction": direction, "frequency": led_freq, "count": led_count}]
+    addressed = {"direction": direction, "frequency": led_freq, "count": led_count}
 
     enabled = False
     number = 0
     speed = 2
-    animation = [{"enabled": enabled, "number": number, "speed": speed}]
+    animation = {"enabled": enabled, "number": number, "speed": speed}
 
     keys = ["brightness", "red", "green", "blue", "led5", "led12", "addressed", "animation"]
     values = [brightness, red, green, blue, led5, led12, addressed, animation]
