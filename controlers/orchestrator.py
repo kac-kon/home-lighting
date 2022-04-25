@@ -2,20 +2,12 @@ from typing import Dict
 
 from controlers.led_control import LED
 from controlers.sensors import Sensors
-from controlers.spectrum import Spec
-from controlers.distance_sensor import DistanceSensor
-from controlers.light_sensor import LightSensor
-from controlers.motion_sensor import MotionSensor
 
 
 class Orchestrator:
     def __init__(self):
         self._led = LED()
-        self._spec = Spec(self._led)
-        self._distance = DistanceSensor()
-        self._light = LightSensor()
-        self._motion = MotionSensor()
-        self._sensors = Sensors(self, self._distance, self._light, self._motion)
+        self._sensors = Sensors(self)
 
         self.set_colors([255, 255, 255])
 
@@ -24,10 +16,10 @@ class Orchestrator:
         return self._led.lights_on
 
     def start_auto_led(self) -> None:
-        self._spec.start_auto()
+        self._led.spectrum.start_auto()
 
     def stop_auto_led(self) -> None:
-        self._spec.stop_auto()
+        self._led.spectrum.stop_auto()
 
     def set_colors(self, colors: list) -> None:
         self._led.set_color(colors)
@@ -50,10 +42,10 @@ class Orchestrator:
         :param properties: accepted keys: sensitivity, inertia, frequency, fade_speed
         :return: None
         """
-        self._spec.set_properties(properties)
+        self._led.spectrum.set_properties(properties)
 
     def get_autoled_properties(self) -> dict:
-        return self._spec.get_properties()
+        return self._led.spectrum.get_properties()
 
     def get_led_state(self) -> dict:
         return self._led.get_led_state()

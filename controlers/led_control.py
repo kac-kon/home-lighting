@@ -1,8 +1,9 @@
 from typing import List, Any, Dict
 
 from controlers.monitoring import Monitoring
+from controlers.spectrum import Spectrum
 from initials import constants
-from initials.variables import LedVar
+from initials.variables import Variables
 
 import time
 import pigpio
@@ -12,7 +13,8 @@ from rpi_ws281x import *
 
 class LED:
     def __init__(self):
-        self._var = LedVar()
+        self.spectrum = Spectrum(self)
+        self._var = Variables()
         self._pi = pigpio.pi()
         self._strip = Adafruit_NeoPixel(constants.LEDStrip.LED_COUNT,
                                         constants.LEDStrip.LED_PIN,

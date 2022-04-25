@@ -1,7 +1,7 @@
 from initials import constants
 
 
-class LedVar:
+class Variables:
     def __init__(self):
         self._led12_on = constants.INITIALS.LED12_ON
         self._led5_on = constants.INITIALS.LED5_ON

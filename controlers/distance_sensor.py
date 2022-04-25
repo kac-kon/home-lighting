@@ -10,7 +10,6 @@ class DistanceSensor:
         GPIO.setmode(GPIO.BCM)
         self._trigger = INITS.GPIO_TRIGGER
         self._echo = INITS.GPIO_ECHO
-        self._delta = 5
         self.distance = 0
         self.threshold = 3
 

@@ -7,11 +7,10 @@ import pyaudio
 import random
 from struct import unpack
 import numpy as np
-from controlers.led_control import LED
 
 
-class Spec:
-    def __init__(self, led: LED, device=AUDIO.DEFAULT_DEVICE):
+class Spectrum:
+    def __init__(self, led, device=AUDIO.DEFAULT_DEVICE):
         self._led = led
         self._device = device
         self.matrix = np.zeros(10)

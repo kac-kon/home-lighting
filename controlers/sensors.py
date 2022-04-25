@@ -9,15 +9,11 @@ from initials.constants import INITIALS
 
 
 class Sensors:
-    def __init__(self,
-                 orchestrator,
-                 distance_sensor: DistanceSensor,
-                 light_sensor: LightSensor,
-                 motion_sensor: MotionSensor):
+    def __init__(self, orchestrator):
         self._orchestrator = orchestrator
-        self._distance_sensor = distance_sensor
-        self._light_sensor = light_sensor
-        self._motion_sensor = motion_sensor
+        self._distance_sensor = DistanceSensor()
+        self._light_sensor = LightSensor()
+        self._motion_sensor = MotionSensor()
 
         self._motion_timeout = INITIALS.MOTION_TIMEOUT
 
